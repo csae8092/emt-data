@@ -131,4 +131,5 @@ dmypy.json
 # project specific
 secret.sh
 transkribus_out/
+data/tmp
 md.csv

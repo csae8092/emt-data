@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:tei="http://www.tei-c.org/ns/1.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xml:id="{{ file_name }}"
+   xml:base="https://id.acdh.oeaw.ac.at/kem">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title type="main">{{ title }}</title>
+            <title type="sub">Familiensache. Dynastische Handlungsspielräume in der Korrespondenz von Kaiserin Eleonora Magdalena von Pfalz-Neuburg (1655-1720)</title>
+            <author>{{ sender }}</author>
+            <editor>
+               <name>Katrin Keller</name>
+            </editor>
+            <funder>
+               <name>FWF - Der Wissenschaftsfonds</name>
+               <address>
+                  <street>Sensengasse 1</street>
+                  <postCode>1090 Wien</postCode>
+                  <placeName>
+                     <country>A</country>
+                     <settlement>Wien</settlement>
+                  </placeName>
+               </address>
+            </funder>
+         </titleStmt>
+         <editionStmt>
+            <edition>EMT</edition>
+            <respStmt>
+               <resp>Transkription und Annotation</resp>
+               <name>N. N.</name>
+            </respStmt>
+         </editionStmt>
+         <publicationStmt>
+            <publisher>INSTITUT FÜR DIE ERFORSCHUNG DER HABSBURGERMONARCHIE UND DES BALKANRAUMES</publisher>
+            <pubPlace>Vienna</pubPlace>
+            <date when="2021">2021</date>
+            <availability>
+               <licence>
+                  <p>copyright</p>
+               </licence>
+            </availability>
+         </publicationStmt>
+         <sourceDesc>
+            <listWit>
+               <witness n="1">
+                  <msDesc>
+                     <msIdentifier>
+                        <country>Deutschland</country>
+                        <settlement>{{ settlement }}</settlement>
+                        <repository>{{ repositor }}</repository>
+                        {% if collection %}
+                        <collection>{{ collection }}</collection>
+                        {% endif %}
+                        <idno>{{ idno }}</idno>
+                     </msIdentifier>
+                     <history>
+                        <origin><origDate{% if parsed_date %} when-iso="{{ parsed_date.strftime('%Y-%m-%d') }}" {% endif %}>{{ written_date }}</origDate></origin>
+                     </history>
+                  </msDesc>
+               </witness>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+      <profileDesc>
+         <langUsage>
+            <language ident="{{ lang_code }}">{{ language }}</language>
+         </langUsage>
+         <correspDesc>
+            <correspAction type="sent">
+               <persName ref="#{{ sender_id }}">{{ sender }}</persName>
+               <placeName ref="#{{ sender_id_place }}">{{ sender_place }}</placeName>
+               <date {% if parsed_date %} when-iso="{{ parsed_date.strftime('%Y-%m-%d') }}" {% endif %}>{{ written_date }}</date>
+            </correspAction>
+            <correspAction type="received">
+                <persName ref="#{{ receiver_id }}">{{ receiver }}</persName>
+                <placeName ref="#{{ receiver_id_place }}">{{ receiver_place }}</placeName>
+                <date></date>
+            </correspAction>
+         </correspDesc>
+      </profileDesc>
+      <revisionDesc status="draft">
+         <change who="pandorfer" when="{{ current_date }}">template populated with script "create_templates.py"</change>
+      </revisionDesc>
+   </teiHeader>
+   <facsimile>
+{%- for x in pages %}
+      {% if x.facs_string %}
+      {{ x.facs_string|safe }}
+      {% else %}
+      <surface ulx="0" uly="0" lrx="{{ x.width }}" lry="{{ x.height }}">
+         <graphic url="{{ x.url }}"/>
+      </surface>  
+      {% endif %} 
+{%- endfor %}
+   </facsimile>
+   <text type="letter">
+      <body>
+         <div xml:id="transcription">
+         {%- for x in pages %}
+         {% if x.body_string %}
+         {{ x.body_string|safe }}
+         {% else %}
+            <pb facs="{{ x.url }}" type="{{ x.p_type }}"/>
+         {% endif %}
+         {%- endfor %}
+         </div>
+      </body>
+   </text>
+</TEI>
